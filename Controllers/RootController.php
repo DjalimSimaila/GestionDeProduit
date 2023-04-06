@@ -5,12 +5,36 @@ class RootController extends AController {
     public function process(){
         switch($this->urlFolder){
             case '':
-            case 'game':
-            case 'index.php':{
-                echo "home page";
+            case 'index':{
+                $this->callController(new IndexController());
                 break;
             }
-            case 'api':{
+            case 'login': {
+                $loginController = new LoginController($this->urlParams);
+                $loginController->display();
+                break;
+            }
+            case 'products' : {
+                $productsController = new ProductsController($this->urlParams);
+                $productsController->display();
+                break;
+            }
+            case 'product' : {
+                $productController = new ProductController($this->urlParams);
+                $productController->display();
+                break;
+            }
+            case 'carts' : {
+                $cartsController = new CartsController($this->urlParams);
+                $cartsController->display();
+                break;
+            }
+            case 'cart' : {
+                $cartController = new CartController($this->urlParams);
+                $cartController->display();
+                break;
+            }
+            case 'api': {
                 $this->callController(new APIController());
                 break;
             }

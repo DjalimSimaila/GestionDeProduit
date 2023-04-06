@@ -1,0 +1,776 @@
+openapi: '3.0.2'
+info:
+  title: API Title
+  version: '1.0'
+servers:
+  - url: https://api.server.test/v1
+tags:
+  - name: products
+  - name: cart
+  - name: commands
+
+
+paths:
+  /product:
+    post:
+      description: "ajoute un produit dans la base de donnée"
+      tags:
+        - "products"
+      requestBody:
+        description: les données du produit
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                price:
+                  type: number
+                quantity:
+                  type: integer
+                unit_id:
+                  type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+
+  /product/{product_id}:
+    get:
+      description: "recupere un produit identifié par son id"
+      parameters:
+        - in: path
+          name: product_id
+          schema:
+            type: integer
+          required: true
+          description: id
+      tags:
+        - "products"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  price:
+                    type: number
+                  quantity:
+                    type: integer
+                  unit_id:
+                    type: integer
+
+    put:
+      description: "modifie le produit identifié par son id"
+      parameters:
+        - in: path
+          name: product_id
+          schema:
+            type: integer
+          required: true
+          description: id
+      requestBody:
+        description: les données du produit
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                price:
+                  type: number
+                quantity:
+                  type: integer
+                unit_id:
+                  type: integer
+      tags:
+        - "products"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+
+    delete:
+      description: "suprime le produit"
+      parameters:
+        - in: path
+          name: product_id
+          schema:
+            type: integer
+          required: true
+          description: id
+      tags:
+        - "products"
+      responses:
+        '200':
+          description: OK
+
+  /unit:
+    post:
+      description: "ajoute une unité de produit"
+      tags:
+        - "products"
+      requestBody:
+        description: l'unité a ajouter
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+
+  /unit/{unit_id}:
+    get:
+      description: "recupere l'unité identifié par son id"
+      parameters:
+        - in: path
+          name: unit_id
+          schema:
+            type: integer
+          required: true
+          description: id
+      tags:
+        - "products"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+
+    put:
+      description: "modifie l'unité identifié par son id"
+      parameters:
+        - in: path
+          name: unit_id
+          schema:
+            type: integer
+          required: true
+          description: id
+      requestBody:
+        description: le nouveau nom de l'unité
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+
+      tags:
+        - "products"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+
+    delete:
+      description: "supprime l'unité identifié par son id"
+      parameters:
+        - in: path
+          name: unit_id
+          schema:
+            type: integer
+          required: true
+          description: id
+      tags:
+        - "products"
+      responses:
+        '200':
+          description: OK
+
+  /cart:
+    post:
+      description: "crée un nouveau panier pour l'utilisateur en parametre"
+      tags:
+        - "cart"
+      requestBody:
+        description: le produit a ajouter
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                user_id:
+                  type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+
+  /cart/{cart_id}:
+    post:
+      description: "ajoute un produit dans le panier"
+      parameters:
+        - in: path
+          name: cart_id
+          schema:
+            type: integer
+          required: true
+          description: id
+      tags:
+        - "cart"
+      requestBody:
+        description: le produit a ajouter
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product_id:
+                  type: integer
+                quantity:
+                  type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: integer
+
+    get:
+      description: "recupere un panier et ses produit si demandé"
+      parameters:
+        - in: path
+          name: cart_id
+          schema:
+            type: integer
+          required: true
+          description: id
+      tags:
+        - "cart"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  products:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        product_id:
+                          type: integer
+                        quantity:
+                          type: integer
+                  name:
+                    type: string
+                  user_id:
+                    type: integer
+        '201':
+          description: si il y a ?resolveProducts=true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  products:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        product:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            name:
+                              type: string
+                            price:
+                              type: number
+                            quantity:
+                              type: integer
+                            unit_id:
+                              type: integer
+                        quantity:
+                          type: integer
+                  name:
+                    type: string
+                  user_id:
+                    type: integer
+
+    put:
+      description: "modifie le panier"
+      parameters:
+        - in: path
+          name: cart_id
+          schema:
+            type: integer
+          required: true
+          description: id
+      requestBody:
+        description: les données du panier
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                  products:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        product_id:
+                          type: integer
+                        quantity:
+                          type: integer
+                  name:
+                    type: string
+                  user_id:
+                    type: integer
+      tags:
+        - "cart"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: integer
+
+    delete:
+      description: "supprime un panier"
+      parameters:
+        - in: path
+          name: cart_id
+          schema:
+            type: integer
+          required: true
+          description: id
+      tags:
+        - "cart"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: integer
+
+  /cart/{cart_id}/{product_id}:
+    delete:
+      description: "supprime un produit dans un panier"
+      parameters:
+        - in: path
+          name: cart_id
+          schema:
+            type: integer
+          required: true
+          description: id
+        - in: path
+          name: product_id
+          schema:
+            type: integer
+          required: true
+          description: id
+      tags:
+        - "cart"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: integer
+
+  /command:
+    post:
+      description: "valide un panier, crée la commande, et calcule le prix"
+      tags:
+        - "commands"
+      requestBody:
+        description: panier a valider
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cart_id:
+                  type: integer
+                pickup_point_id:
+                  type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /command/{cart_id}:
+    get:
+      description: "recupere une commande"
+      parameters:
+        - in: path
+          name: cart_id
+          schema:
+            type: integer
+          required: true
+          description: id
+      tags:
+        - "commands"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cart_id:
+                    type: integer
+                  date:
+                    type: string
+                  price:
+                    type: number
+                  pickup_point_id:
+                    type: number
+        '201':
+          description: si il y a ?resolveCart=true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cart:
+                    type: object
+                    properties:
+                      products:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            product_id:
+                              type: integer
+                            quantity:
+                              type: integer
+                      user_id:
+                        type: integer
+                      name:
+                        type: string
+                  date:
+                    type: string
+                  price:
+                    type: number
+                  pickup_point_id:
+                    type: number
+        '202':
+          description: si il y a ?resolveCart=true&resolveProducts=true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cart:
+                    type: object
+                    properties:
+                      products:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            product:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                name:
+                                  type: string
+                                price:
+                                  type: number
+                                quantity:
+                                  type: integer
+                                unit_id:
+                                  type: integer
+                            quantity:
+                              type: integer
+                      user_id:
+                        type: integer
+                      name:
+                        type: string
+                  date:
+                    type: string
+                  price:
+                    type: number
+                  pickup_point_id:
+                    type: number
+        '203':
+          description: si il y a ?resolveCart=true&resolveProducts=true&resolvePickupPoint=true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cart:
+                    type: object
+                    properties:
+                      products:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            product:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                name:
+                                  type: string
+                                price:
+                                  type: number
+                                quantity:
+                                  type: integer
+                                unit_id:
+                                  type: integer
+                            quantity:
+                              type: integer
+                      user_id:
+                        type: integer
+                      name:
+                        type: string
+                  date:
+                    type: string
+                  price:
+                    type: number
+                  pickup_point:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      adress:
+                        type: string
+
+    put:
+      description: "met a jour une commande"
+      parameters:
+        - in: path
+          name: cart_id
+          schema:
+            type: integer
+          required: true
+          description: id
+      requestBody:
+        description: les données de la commande
+        content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cart_id:
+                    type: integer
+                  date:
+                    type: string
+                  price:
+                    type: number
+                  pickup_point_id:
+                    type: number
+
+      tags:
+        - "commands"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: integer
+
+    delete:
+      description: "supprime une commande"
+      parameters:
+        - in: path
+          name: cart_id
+          schema:
+            type: integer
+          required: true
+          description: id
+      tags:
+        - "commands"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: integer
+
+  /pickupPoint:
+    post:
+      description: "crée un nouveau point de retrait de commande"
+      tags:
+        - "commands"
+      requestBody:
+        description: le point de retrait a ajouter
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                adress:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+
+  /pickupPoint/{pickup_point_id}:
+    get:
+      description: "recupere les données sur un point de retrait"
+      parameters:
+        - in: path
+          name: pickup_point_id
+          schema:
+            type: integer
+          required: true
+          description: id
+      tags:
+        - "commands"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  adress:
+                    type: string
+
+    put:
+      description: "modifie les données d'un point de retrait"
+      parameters:
+        - in: path
+          name: pickup_point_id
+          schema:
+            type: integer
+          required: true
+          description: id
+      requestBody:
+        description: le produit a ajouter
+        content:
+          application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  adress:
+                    type: string
+
+      tags:
+        - "commands"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: integer
+
+    delete:
+      description: "supprime un point de retrait"
+      parameters:
+        - in: path
+          name: pickup_point_id
+          schema:
+            type: integer
+          required: true
+          description: id
+      tags:
+        - "commands"
+      responses:
+        '200':
+          description: OK
+
