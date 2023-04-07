@@ -11,7 +11,7 @@ tags:
 
 
 paths:
-  /product:
+  /products:
     post:
       description: "ajoute un produit dans la base de donnée"
       tags:
@@ -42,7 +42,7 @@ paths:
                   id:
                     type: integer
 
-  /product/{product_id}:
+  /products/{product_id}:
     get:
       description: "recupere un produit identifié par son id"
       parameters:
@@ -125,104 +125,7 @@ paths:
         '200':
           description: OK
 
-  /unit:
-    post:
-      description: "ajoute une unité de produit"
-      tags:
-        - "products"
-      requestBody:
-        description: l'unité a ajouter
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-
-  /unit/{unit_id}:
-    get:
-      description: "recupere l'unité identifié par son id"
-      parameters:
-        - in: path
-          name: unit_id
-          schema:
-            type: integer
-          required: true
-          description: id
-      tags:
-        - "products"
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                  name:
-                    type: string
-
-    put:
-      description: "modifie l'unité identifié par son id"
-      parameters:
-        - in: path
-          name: unit_id
-          schema:
-            type: integer
-          required: true
-          description: id
-      requestBody:
-        description: le nouveau nom de l'unité
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-
-      tags:
-        - "products"
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-
-    delete:
-      description: "supprime l'unité identifié par son id"
-      parameters:
-        - in: path
-          name: unit_id
-          schema:
-            type: integer
-          required: true
-          description: id
-      tags:
-        - "products"
-      responses:
-        '200':
-          description: OK
-
-  /cart:
+  /carts:
     post:
       description: "crée un nouveau panier pour l'utilisateur en parametre"
       tags:
@@ -249,7 +152,7 @@ paths:
                   id:
                     type: integer
 
-  /cart/{cart_id}:
+  /carts/{cart_id}/product:
     post:
       description: "ajoute un produit dans le panier"
       parameters:
@@ -283,6 +186,72 @@ paths:
                   error:
                     type: integer
 
+  /carts/user/{user_id}:
+    get:
+      description: "recupere un panier et ses produit si demandé"
+      parameters:
+        - in: path
+          name: cart_id
+          schema:
+            type: integer
+          required: true
+          description: id
+      tags:
+        - "cart"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  products:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        product_id:
+                          type: integer
+                        quantity:
+                          type: integer
+                  name:
+                    type: string
+                  user_id:
+                    type: integer
+        '201':
+          description: si il y a ?resolveProducts=true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  products:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        product:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            name:
+                              type: string
+                            price:
+                              type: number
+                            quantity:
+                              type: integer
+                            unit_id:
+                              type: integer
+                        quantity:
+                          type: integer
+                  name:
+                    type: string
+                  user_id:
+                    type: integer
+
+  /carts/{cart_id}:
     get:
       description: "recupere un panier et ses produit si demandé"
       parameters:
@@ -411,7 +380,7 @@ paths:
                   error:
                     type: integer
 
-  /cart/{cart_id}/{product_id}:
+  /carts/{cart_id}/product/{product_id}:
     delete:
       description: "supprime un produit dans un panier"
       parameters:
@@ -440,7 +409,7 @@ paths:
                   error:
                     type: integer
 
-  /command:
+  /commands:
     post:
       description: "valide un panier, crée la commande, et calcule le prix"
       tags:
@@ -464,7 +433,7 @@ paths:
               schema:
                 type: object
 
-  /command/{cart_id}:
+  /commands/{cart_id}:
     get:
       description: "recupere une commande"
       parameters:
@@ -668,109 +637,3 @@ paths:
                 properties:
                   error:
                     type: integer
-
-  /pickupPoint:
-    post:
-      description: "crée un nouveau point de retrait de commande"
-      tags:
-        - "commands"
-      requestBody:
-        description: le point de retrait a ajouter
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                adress:
-                  type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-
-  /pickupPoint/{pickup_point_id}:
-    get:
-      description: "recupere les données sur un point de retrait"
-      parameters:
-        - in: path
-          name: pickup_point_id
-          schema:
-            type: integer
-          required: true
-          description: id
-      tags:
-        - "commands"
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                  name:
-                    type: string
-                  adress:
-                    type: string
-
-    put:
-      description: "modifie les données d'un point de retrait"
-      parameters:
-        - in: path
-          name: pickup_point_id
-          schema:
-            type: integer
-          required: true
-          description: id
-      requestBody:
-        description: le produit a ajouter
-        content:
-          application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                  name:
-                    type: string
-                  adress:
-                    type: string
-
-      tags:
-        - "commands"
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: integer
-
-    delete:
-      description: "supprime un point de retrait"
-      parameters:
-        - in: path
-          name: pickup_point_id
-          schema:
-            type: integer
-          required: true
-          description: id
-      tags:
-        - "commands"
-      responses:
-        '200':
-          description: OK
-
