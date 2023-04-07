@@ -117,7 +117,7 @@ class Cart
 
     public function addProduct(Product $O_product, int $I_quantity)
     {
-        $this->A_products = array(
+        $this->A_products[] = array(
             "product" => $O_product,
             "quantity" => $I_quantity
         );
