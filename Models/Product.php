@@ -42,7 +42,7 @@ class Product {
 
     public static function getById(int $I_id): Product
     {
-        return new Product();
+        return self::createFull("test", 1, 1.0);
         $curlConnection  = curl_init();
         $params = array(
             CURLOPT_URL =>  "http://localhost:8080/product/".$I_id,
@@ -69,7 +69,7 @@ class Product {
         );
         $curlConnection  = curl_init();
         $params = array(
-            CURLOPT_URL =>  "http://localhost:8080/product/".$this->I_id,
+            CURLOPT_URL =>  "http://localhost:8080/products/".$this->I_id,
             CURLOPT_PUT => 1,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POSTFIELDS => json_encode($O_data),
@@ -83,13 +83,40 @@ class Product {
     {
         $curlConnection  = curl_init();
         $params = array(
-            CURLOPT_URL =>  "http://localhost:8080/product/".$this->I_id,
+            CURLOPT_URL =>  "http://localhost:8080/products/".$this->I_id,
             CURLOPT_CUSTOMREQUEST => "DELETE",
             CURLOPT_RETURNTRANSFER => true,
         );
         curl_setopt_array($curlConnection, $params);
         $response = curl_exec($curlConnection);
         curl_close($curlConnection);
+    }
+
+    public static function getAll(){
+        return [
+            self::createFull("test", 1, 1.0),
+            self::createFull("test2", 2, 2.0),
+            self::createFull("test3", 3, 3.0),
+        ];
+        $curlConnection  = curl_init();
+        $params = array(
+            CURLOPT_URL =>  "http://localhost:8080/products",
+            CURLOPT_RETURNTRANSFER => true,
+        );
+        curl_setopt_array($curlConnection, $params);
+        $response = curl_exec($curlConnection);
+        curl_close($curlConnection);
+        $response = json_decode($response);
+        $products = array();
+        foreach ($response as $product) {
+            $product = new Product();
+            $product->I_id = $product->id;
+            $product->S_name = $product->name;
+            $product->I_quantity = $product->quantity;
+            $product->F_price = $product->price;
+            array_push($products, $product);
+        }
+        return $products;
     }
 }
 

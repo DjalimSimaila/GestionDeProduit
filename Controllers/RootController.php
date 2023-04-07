@@ -4,16 +4,13 @@ class RootController extends AController {
 
     public function process(){
         switch($this->urlFolder){
-            case '':
-            case 'index':{
-                $this->callController(new IndexController());
-                break;
-            }
             case 'login': {
                 $loginController = new LoginController($this->urlParams);
                 $loginController->display();
                 break;
             }
+            case '':
+            case 'index':
             case 'products' : {
                 $productsController = new ProductsController($this->urlParams);
                 $productsController->display();
